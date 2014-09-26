@@ -34,6 +34,11 @@ import time
 #Imports für die Gui
 from PyQt4 import QtGui, QtCore
 
+from PyQt4.QtGui import QMainWindow, QWidget, QVBoxLayout,QHBoxLayout,\
+      QApplication,QComboBox, QPushButton, QLineEdit, QGridLayout, QLabel, \
+      QLCDNumber, QColor, QPalette, QFrame, qApp, QIcon
+
+
 
 #Importiere mir von Fluke45_GUI.py die Klasse Ui_Fluke45_GUI und wir nennen
 #diese Klasse im anschluss nurnoch F45Gui
@@ -48,6 +53,7 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
     def __init__(self): 
         QtGui.QMainWindow.__init__(self)
         self.setupUi(self)
+        
         
         
     def settext(self, Outputdata):
@@ -71,12 +77,9 @@ class Fluke45(makeGui):
     
 
 ###############################################################################
-#serialPort öffnet den COM-Port zum Fluke mit den standard RS-232 Einstellungen
-#TODO: Funktion durch die aus "Verstärker_v3.py" ersetzen
-###############################################################################
     def serialPort(self):
         """
-        TODO: Kommentare Umpflegen
+        #serialPort öffnet den COM-Port zum Fluke mit den standard RS-232 Einstellungen
         """
         if(DEBUG):
             print ("Serialport")
@@ -90,16 +93,39 @@ class Fluke45(makeGui):
                                  timeout = 1
                                  ) 
 
+    def serialScan(self):
+        """
+        Sucht nach verfügbaren Com-Ports und gibt diese in einer Liste zurück
+        """
+
+        ports = []
+        for i in range(256):
+            try:
+                
+    #Wenn der serielle Port NICHT geöfnet werden kann, wird eine Exception
+    #"serial.SerialException" geschmissen. Diese wird abgefangen und die for-Schleife
+    #läuft weiter OHNE dabei den nicht erreichbaren Port in die ports-Liste einzutragen            
+                self.ser = serial.Serial(i)
+                
+    #Befülle dir Portliste mit den Com-Ports die geöfnet werden konnten
+                ports.append([i, self.ser.portstr])
+                self.ser.close()
+            except serial.SerialException:
+                pass
+        return ports
 
 
 
-###############################################################################
-#serialReadLine liest alle gesendeten Zeilen des Fluke45 solange bis das
-#Messgerät den Sendebetrieb einstellt. Der Sendebetrieb ist vorbei, sobald
-#das Messgerät ein Steuerzeichen ('=>' oder '?>' oder '!>') gefolgt von einem
-#CR und LF (CR = Carriage Return, LF = Line Feed)
+
+
 ###############################################################################
     def serialReadLine(self):
+        """
+        #serialReadLine liest alle gesendeten Zeilen des Fluke45 solange bis das
+        #Messgerät den Sendebetrieb einstellt. Der Sendebetrieb ist vorbei, sobald
+        #das Messgerät ein Steuerzeichen ('=>' oder '?>' oder '!>') gefolgt von einem
+        #CR und LF (CR = Carriage Return, LF = Line Feed)
+        """
         Value = []
         i=0
         while (i == 0):
@@ -150,14 +176,16 @@ class Fluke45(makeGui):
         return Value
 
                                        
-###############################################################################
-#serialSend sendet momentan nur den *IDN? Befehl
-# *IDN? vordert das Fluke45 auf sich zu Identifizieren (VersionsNR. etc)  
-
-#TODO: Allgemeingültige Sendefunktion schreiben.
-#TODO: Minimale Syntaxprüfung? (Optional)                   
+                 
 ###############################################################################
     def serialSend_VAL(self):
+        """
+        #serialSend sendet momentan nur den *IDN? Befehl
+        # *IDN? vordert das Fluke45 auf sich zu Identifizieren (VersionsNR. etc)  
+        
+        #TODO: Allgemeingültige Sendefunktion schreiben.
+        #TODO: Minimale Syntaxprüfung? (Optional)
+        """
         if(DEBUG):
             print("serialSend_IDN")
         self.ser.write("VAL?\n")
@@ -174,6 +202,11 @@ class Fluke45(makeGui):
         hutzelbrutzel = self.serialReadLine()    
         self.settext(hutzelbrutzel)
         
+    def exitApp(self):
+        self.ser.close()
+        qApp.quit()
+        
+        
         
   
 ###############################################################################
@@ -182,19 +215,26 @@ class Fluke45(makeGui):
 
 def main(args=sys.argv[1:]):
     
+    
+    
     app = QtGui.QApplication(sys.argv) 
-    #gui = makeGui()
+    
     
     flu = Fluke45()
     flu.__init__
-    flu.serialPort()
+
+    ValidComPorts = flu.serialScan()
+    for i in range(len(ValidComPorts)):
+        flu.comboBox_COM.addItem(ValidComPorts[i][1])
     
     
     
-    
+
+    #TODO: Übergabeparameter klären gegebenenfalls umschreiben mit nur eienr Klasse
+    flu.connect(flu.comboBox_COM, QtCore.SIGNAL("activated(QString)"),flu.serialPort)
     flu.connect(flu.pushButton_IDN, QtCore.SIGNAL("clicked()"),flu.serialSend_IDN)
     flu.connect(flu.pushButton_VAL, QtCore.SIGNAL("clicked()"),flu.serialSend_VAL)
-    flu.connect(flu.pushButton_exit, QtCore.SIGNAL("clicked()"),sys.exit)
+    flu.connect(flu.pushButton_exit, QtCore.SIGNAL("clicked()"),flu.exitApp)
 
     flu.show()
     

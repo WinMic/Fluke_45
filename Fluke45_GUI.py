@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Fluke45_GUI.ui'
 #
-# Created: Thu Sep 18 16:01:30 2014
+# Created: Fri Sep 26 16:27:59 2014
 #      by: PyQt4 UI code generator 4.9.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,25 +26,37 @@ except AttributeError:
 class Ui_Fluke45_GUI(object):
     def setupUi(self, Fluke45_GUI):
         Fluke45_GUI.setObjectName(_fromUtf8("Fluke45_GUI"))
-        Fluke45_GUI.resize(385, 294)
+        Fluke45_GUI.resize(588, 546)
         self.centralwidget = QtGui.QWidget(Fluke45_GUI)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
-        self.horizontalLayout = QtGui.QHBoxLayout(self.centralwidget)
-        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.formLayout = QtGui.QFormLayout(self.centralwidget)
+        self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout.setObjectName(_fromUtf8("formLayout"))
         self.groupBox_Input = QtGui.QGroupBox(self.centralwidget)
         self.groupBox_Input.setObjectName(_fromUtf8("groupBox_Input"))
-        self.verticalLayout = QtGui.QVBoxLayout(self.groupBox_Input)
-        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.gridLayout = QtGui.QGridLayout(self.groupBox_Input)
+        self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.pushButton_IDN = QtGui.QPushButton(self.groupBox_Input)
         self.pushButton_IDN.setObjectName(_fromUtf8("pushButton_IDN"))
-        self.verticalLayout.addWidget(self.pushButton_IDN)
+        self.gridLayout.addWidget(self.pushButton_IDN, 0, 0, 1, 1)
         self.pushButton_VAL = QtGui.QPushButton(self.groupBox_Input)
         self.pushButton_VAL.setObjectName(_fromUtf8("pushButton_VAL"))
-        self.verticalLayout.addWidget(self.pushButton_VAL)
+        self.gridLayout.addWidget(self.pushButton_VAL, 1, 0, 1, 1)
         self.pushButton_exit = QtGui.QPushButton(self.groupBox_Input)
         self.pushButton_exit.setObjectName(_fromUtf8("pushButton_exit"))
-        self.verticalLayout.addWidget(self.pushButton_exit)
-        self.horizontalLayout.addWidget(self.groupBox_Input)
+        self.gridLayout.addWidget(self.pushButton_exit, 2, 0, 1, 1)
+        self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.groupBox_Input)
+        self.groupBox = QtGui.QGroupBox(self.centralwidget)
+        self.groupBox.setObjectName(_fromUtf8("groupBox"))
+        self.horizontalLayout = QtGui.QHBoxLayout(self.groupBox)
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.label = QtGui.QLabel(self.groupBox)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.horizontalLayout.addWidget(self.label)
+        self.comboBox_COM = QtGui.QComboBox(self.groupBox)
+        self.comboBox_COM.setObjectName(_fromUtf8("comboBox_COM"))
+        self.horizontalLayout.addWidget(self.comboBox_COM)
+        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.groupBox)
         self.groupBox_Output = QtGui.QGroupBox(self.centralwidget)
         self.groupBox_Output.setObjectName(_fromUtf8("groupBox_Output"))
         self.horizontalLayout_2 = QtGui.QHBoxLayout(self.groupBox_Output)
@@ -52,10 +64,10 @@ class Ui_Fluke45_GUI(object):
         self.textBrowser_Output = QtGui.QTextBrowser(self.groupBox_Output)
         self.textBrowser_Output.setObjectName(_fromUtf8("textBrowser_Output"))
         self.horizontalLayout_2.addWidget(self.textBrowser_Output)
-        self.horizontalLayout.addWidget(self.groupBox_Output)
+        self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.groupBox_Output)
         Fluke45_GUI.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(Fluke45_GUI)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 385, 18))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 588, 18))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         Fluke45_GUI.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(Fluke45_GUI)
@@ -71,5 +83,7 @@ class Ui_Fluke45_GUI(object):
         self.pushButton_IDN.setText(_translate("Fluke45_GUI", "Identify", None))
         self.pushButton_VAL.setText(_translate("Fluke45_GUI", "Value", None))
         self.pushButton_exit.setText(_translate("Fluke45_GUI", "Beenden", None))
+        self.groupBox.setTitle(_translate("Fluke45_GUI", "Einstellungen", None))
+        self.label.setText(_translate("Fluke45_GUI", "COM-Port", None))
         self.groupBox_Output.setTitle(_translate("Fluke45_GUI", "Output", None))
 
