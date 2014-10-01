@@ -53,6 +53,14 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
     def __init__(self): 
         QtGui.QMainWindow.__init__(self)
         self.setupUi(self)
+        self.pushButton_IDN.clicked.connect(self.serialSend_IDN)
+        self.pushButton_VAL.clicked.connect(self.serialSend_VAL)
+        self.pushButton_exit.clicked.connect(self.exitApp)
+        
+        
+        """
+        yield next (Abfrage für Gui)
+        """
         
         
         
@@ -73,7 +81,7 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
 #######################
 
 #Definition des Objektes "Fluke45"
-class Fluke45(makeGui):
+#class Fluke45(makeGui):
     
 
 ###############################################################################
@@ -84,18 +92,14 @@ class Fluke45(makeGui):
         if(DEBUG):
             print ("Serialport")
         
-                
-        
-        com = self.comboBox_COM.currentText()
-        
         self.ser = serial.Serial(
-                                 port=str(com),
+                                 port='COM6',
                                  baudrate=9600,
                                  parity=serial.PARITY_NONE,
                                  stopbits=serial.STOPBITS_ONE,
                                  bytesize=serial.EIGHTBITS,
                                  timeout = 1
-                                 )
+                                 ) 
 
     def serialScan(self):
         """
@@ -209,7 +213,7 @@ class Fluke45(makeGui):
     def exitApp(self):
         self.ser.close()
         qApp.quit()
-        
+        yield
         
         
   
@@ -218,32 +222,42 @@ class Fluke45(makeGui):
 ###############################################################################
 
 def main(args=sys.argv[1:]):
-    
-    
-    
+
+
+
     app = QtGui.QApplication(sys.argv) 
     
     
     flu = Fluke45()
     flu.__init__
-
+    
     ValidComPorts = flu.serialScan()
     for i in range(len(ValidComPorts)):
         flu.comboBox_COM.addItem(ValidComPorts[i][1])
     
     
+    """
+    self.combo.currentIndexChanged['QString'].connect(self.handleChanged)
+    wenn alles in einer Klasse ist
+    """
     
-
+    
     #TODO: Übergabeparameter klären gegebenenfalls umschreiben mit nur eienr Klasse
-    flu.connect(flu.comboBox_COM, QtCore.SIGNAL("activated(QString)"),flu.serialPort)
-    flu.connect(flu.pushButton_IDN, QtCore.SIGNAL("clicked()"),flu.serialSend_IDN)
-    flu.connect(flu.pushButton_VAL, QtCore.SIGNAL("clicked()"),flu.serialSend_VAL)
-    flu.connect(flu.pushButton_exit, QtCore.SIGNAL("clicked()"),flu.exitApp)
-
+    #    flu.connect(flu.comboBox_COM, QtCore.SIGNAL("activated(QString)"),flu.serialPort)
+    #    flu.connect(flu.pushButton_IDN, QtCore.SIGNAL("clicked()"),flu.serialSend_IDN)
+    #    flu.connect(flu.pushButton_VAL, QtCore.SIGNAL("clicked()"),flu.serialSend_VAL)
+    #    flu.connect(flu.pushButton_exit, QtCore.SIGNAL("clicked()"),flu.exitApp)
+    
     flu.show()
+
     
-        
-    
-    sys.exit(app.exec_())
+
+sys.exit(app.exec_())
 if __name__ == '__main__':
-    main()
+main()
+
+
+#app = QtGui.QApplication(sys.argv) 
+#dialog = makeGui() 
+#dialog.show() 
+#sys.exit(app.exec_())
