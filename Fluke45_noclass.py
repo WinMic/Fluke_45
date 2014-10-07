@@ -18,8 +18,8 @@ Created on Tue Sep 02 08:48:12 2014
 #gefüllten Eingangspuffer. In diesem Fall wird nichts empfangen. 
 USE_BAUD_DELAY = False  
 
-#Deaktivieren um die Debuginformation auf der Console zu Deaktivieren
-DEBUG = True 
+
+
 
 
 
@@ -54,31 +54,35 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
         QtGui.QMainWindow.__init__(self)
         self.setupUi(self)
         
+        #suche nach verfügbaren Comports und liste diese auf
+        ValidComPorts = self.serialScan()
+        for i in range(len(ValidComPorts)):
+            self.comboBox_COM.addItem(ValidComPorts[i][1])
+        
+        #verbinde die Guielemente mit den Funktionen
+        self.connect(self.comboBox_COM, QtCore.SIGNAL("activated(QString)"),self.serialPort)
+        self.connect(self.pushButton_IDN, QtCore.SIGNAL("clicked()"),self.serialSend_IDN)
+        self.connect(self.pushButton_VAL, QtCore.SIGNAL("clicked()"),self.serialSend_VAL)
+        self.connect(self.pushButton_exit, QtCore.SIGNAL("clicked()"),self.exitApp)
+    
         
         
+    
     def settext(self, Outputdata):
+        """
+        Schreibt die übergebenen Daten in das Textfeld der GUI
+        """
         self.textBrowser_Output.append(str(Outputdata))
-
-#######################
-#       PROGRAM       #
-#######################
-
-#Definition des Objektes "Fluke45"
-class Fluke45(makeGui):
     
 
-###############################################################################
+
     def serialPort(self):
         """
         #serialPort öffnet den COM-Port zum Fluke mit den standard RS-232 Einstellungen
         """
-        if(DEBUG):
-            print ("Serialport")
-        
-                
-        
+        self.Debug_Msg("Serialport")
+
         com = self.comboBox_COM.currentText()
-        
         self.ser = serial.Serial(
                                  port=str(com),
                                  baudrate=9600,
@@ -87,6 +91,15 @@ class Fluke45(makeGui):
                                  bytesize=serial.EIGHTBITS,
                                  timeout = 1
                                  )
+        
+        if(self.ser.isOpen() == False):
+            self.Debug_Msg("COM ist nicht offen")
+            try:
+                self.ser.open()
+                self.Debug_Msg("versuche COM zu oeffnen")
+            except serial.SerialException:
+                self.Debug_Msg("COM konnte nicht geoeffnet werden")
+                self.settext("Ausgewaelter Port konnte nicht geoefnet werden")
 
     def serialScan(self):
         """
@@ -150,27 +163,21 @@ class Fluke45(makeGui):
                 #"=>\r\n" Steuerzeichen für Befehl verstanden, ausgeführt
                 #und bereit für einen neuen Befehl
                 if (Value[(len(Value))-1] == "=>\r\n"):
-                    
-                    #Value[(len(Value))-1] -> Value[:-1]  !!!
-                    
+  
+                    #Value[(len(Value))-1] -> Value[:-1]  !!!           
                     i = 1
-                    if(DEBUG):
-                        print("Fluke45 hat Befehl verstanden u. ausgefuehrt")
-                        
+                    self.Debug_Msg("Fluke45 hat Befehl verstanden u. ausgefuehrt")
                 #"?>\r\n" Steuerzeichen für Befehlsfehler
                 #Befehl wurde nicht verstanden.
                 elif (Value[(len(Value))-1] == '?>\r\n'):
                     i = 2
-                    if(DEBUG):
-                        print("Befehl wurde vom Fluke45 nicht verstanden!")
-                        
+                    self.Debug_Msg("Befehl wurde vom Fluke45 nicht verstanden!")
                 #!>\r\n Steuerzeichen für Syntaxfehler
                 # Befehl wurde verstanden doch ist nicht ausführbar
                 # Siehe Fluke45 Handbuch Seite 5-5!
                 elif (Value[(len(Value))-1] == '!>\r\n'):
                     i = 3
-                    if(DEBUG):
-                        print("Befehl verstanden, aber vom Fluke45 nicht ausfuehrbar")
+                    self.Debug_Msg("Befehl verstanden, aber vom Fluke45 nicht ausfuehrbar")
         return Value
 
                                        
@@ -184,8 +191,7 @@ class Fluke45(makeGui):
         #TODO: Allgemeingültige Sendefunktion schreiben.
         #TODO: Minimale Syntaxprüfung? (Optional)
         """
-        if(DEBUG):
-            print("serialSend_IDN")
+        self.Debug_Msg("serialSend_VAL")
         self.ser.write("VAL?\n")
         hutzelbrutzel = self.serialReadLine()    
         self.settext(hutzelbrutzel)
@@ -194,8 +200,7 @@ class Fluke45(makeGui):
         
         
     def serialSend_IDN(self):
-        if(DEBUG):
-            print("serialSend_IDN")
+        self.Debug_Msg("serialSend_IDN")
         self.ser.write("*IDN?\n")
         hutzelbrutzel = self.serialReadLine()    
         self.settext(hutzelbrutzel)
@@ -215,6 +220,12 @@ class Fluke45(makeGui):
         #oder exit...
         #oder sys quit...
         
+    def Debug_Msg(self,DebugMsg):
+        if(self.checkBox_DEBUG.isChecked()):
+            self.settext(DebugMsg)
+            print(DebugMsg)
+    
+        
         
         
   
@@ -222,35 +233,36 @@ class Fluke45(makeGui):
 #Main Funktion
 ###############################################################################
 
-def main(args=sys.argv[1:]):
-    
-    
-    
-    app = QtGui.QApplication(sys.argv) 
-    
-    
-    flu = Fluke45()
-    flu.__init__
-
-    ValidComPorts = flu.serialScan()
-    for i in range(len(ValidComPorts)):
-        flu.comboBox_COM.addItem(ValidComPorts[i][1])
-    
-    
-    
-
-    #TODO: Übergabeparameter klären gegebenenfalls umschreiben mit nur eienr Klasse
-    flu.connect(flu.comboBox_COM, QtCore.SIGNAL("activated(QString)"),flu.serialPort)
-    flu.connect(flu.pushButton_IDN, QtCore.SIGNAL("clicked()"),flu.serialSend_IDN)
-    flu.connect(flu.pushButton_VAL, QtCore.SIGNAL("clicked()"),flu.serialSend_VAL)
-    flu.connect(flu.pushButton_exit, QtCore.SIGNAL("clicked()"),flu.exitApp)
-    
-
-    flu.show()
-    
-        
-    
-    sys.exit(app.exec_())
+#def main(self):
+#    
+#    
+#    
+#    app = QtGui.QApplication(sys.argv) 
+#    
+#
+#
+#    ValidComPorts = self.serialScan()
+#    for i in range(len(ValidComPorts)):
+#        self.comboBox_COM.addItem(ValidComPorts[i][1])
+#    
+#    
+#    
+#
+#    #TODO: Übergabeparameter klären gegebenenfalls umschreiben mit nur eienr Klasse
+#    self.connect(self.comboBox_COM, QtCore.SIGNAL("activated(QString)"),self.serialPort)
+#    self.connect(self.pushButton_IDN, QtCore.SIGNAL("clicked()"),self.serialSend_IDN)
+#    self.connect(self.pushButton_VAL, QtCore.SIGNAL("clicked()"),self.serialSend_VAL)
+#    self.connect(self.pushButton_exit, QtCore.SIGNAL("clicked()"),self.exitApp)
+#    
+#
+#    self.show()
+#    
+#        
+#    
+#    sys.exit(app.exec_())
     
 if __name__ == '__main__':
-    main()
+    app = QtGui.QApplication(sys.argv)
+    form = makeGui()  
+    form.show()
+    app.exec_()

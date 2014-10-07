@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Fluke45_GUI.ui'
 #
-# Created: Fri Sep 26 16:27:59 2014
+# Created: Tue Oct 07 17:31:34 2014
 #      by: PyQt4 UI code generator 4.9.6
 #
 # WARNING! All changes made in this file will be lost!
@@ -48,14 +48,21 @@ class Ui_Fluke45_GUI(object):
         self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.groupBox_Input)
         self.groupBox = QtGui.QGroupBox(self.centralwidget)
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
-        self.horizontalLayout = QtGui.QHBoxLayout(self.groupBox)
-        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.label = QtGui.QLabel(self.groupBox)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.horizontalLayout.addWidget(self.label)
+        self.gridLayout_2 = QtGui.QGridLayout(self.groupBox)
+        self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
+        self.checkBox_DEBUG = QtGui.QCheckBox(self.groupBox)
+        self.checkBox_DEBUG.setText(_fromUtf8(""))
+        self.checkBox_DEBUG.setObjectName(_fromUtf8("checkBox_DEBUG"))
+        self.gridLayout_2.addWidget(self.checkBox_DEBUG, 0, 1, 1, 1)
         self.comboBox_COM = QtGui.QComboBox(self.groupBox)
         self.comboBox_COM.setObjectName(_fromUtf8("comboBox_COM"))
-        self.horizontalLayout.addWidget(self.comboBox_COM)
+        self.gridLayout_2.addWidget(self.comboBox_COM, 1, 1, 1, 1)
+        self.label_COM = QtGui.QLabel(self.groupBox)
+        self.label_COM.setObjectName(_fromUtf8("label_COM"))
+        self.gridLayout_2.addWidget(self.label_COM, 1, 0, 1, 1)
+        self.label_DEBUG = QtGui.QLabel(self.groupBox)
+        self.label_DEBUG.setObjectName(_fromUtf8("label_DEBUG"))
+        self.gridLayout_2.addWidget(self.label_DEBUG, 0, 0, 1, 1)
         self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.groupBox)
         self.groupBox_Output = QtGui.QGroupBox(self.centralwidget)
         self.groupBox_Output.setObjectName(_fromUtf8("groupBox_Output"))
@@ -84,6 +91,7 @@ class Ui_Fluke45_GUI(object):
         self.pushButton_VAL.setText(_translate("Fluke45_GUI", "Value", None))
         self.pushButton_exit.setText(_translate("Fluke45_GUI", "Beenden", None))
         self.groupBox.setTitle(_translate("Fluke45_GUI", "Einstellungen", None))
-        self.label.setText(_translate("Fluke45_GUI", "COM-Port", None))
+        self.label_COM.setText(_translate("Fluke45_GUI", "COM-Port", None))
+        self.label_DEBUG.setText(_translate("Fluke45_GUI", "Debug Nachrichten", None))
         self.groupBox_Output.setTitle(_translate("Fluke45_GUI", "Output", None))
 
