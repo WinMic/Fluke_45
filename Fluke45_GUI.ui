@@ -6,40 +6,83 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>588</width>
-    <height>546</height>
+    <width>698</width>
+    <height>626</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QFormLayout" name="formLayout">
-    <property name="fieldGrowthPolicy">
-     <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-    </property>
-    <item row="0" column="0">
-     <widget class="QGroupBox" name="groupBox_Input">
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="2" column="0">
+     <widget class="QGroupBox" name="groupBox_Output">
       <property name="title">
-       <string>Input</string>
+       <string>Output</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="pushButton_IDN">
-         <property name="text">
-          <string>Identify</string>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QTextBrowser" name="textBrowser_Output">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>Einstellungen</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
        <item row="1" column="0">
-        <widget class="QPushButton" name="pushButton_VAL">
+        <widget class="QLabel" name="label_DEBUG">
          <property name="text">
-          <string>Value</string>
+          <string>Debug Nachrichten</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="pushButton_exit">
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="checkBox_DEBUG">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_COM">
+         <property name="text">
+          <string>COM-Port</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboBox_COM"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="pushButton_RESET">
+         <property name="text">
+          <string>Reset Fluke</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Reset Fluke45</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" colspan="2">
+        <widget class="QPushButton" name="pushButton_EXIT">
+         <property name="styleSheet">
+          <string notr="true">color: rgb(255, 0, 0);</string>
+         </property>
          <property name="text">
           <string>Beenden</string>
          </property>
@@ -48,47 +91,39 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QGroupBox" name="groupBox">
+    <item row="1" column="0">
+     <widget class="QGroupBox" name="groupBox_Input">
       <property name="title">
-       <string>Einstellungen</string>
+       <string>Input</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="1">
-        <widget class="QCheckBox" name="checkBox_DEBUG">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="comboBox_COM"/>
-       </item>
+      <layout class="QGridLayout" name="gridLayout">
        <item row="1" column="0">
-        <widget class="QLabel" name="label_COM">
+        <widget class="QPushButton" name="pushButton_VAL">
          <property name="text">
-          <string>COM-Port</string>
+          <string>Value</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_DEBUG">
+       <item row="3" column="0">
+        <widget class="QPushButton" name="pushButton_USERINPUT">
          <property name="text">
-          <string>Debug Nachrichten</string>
+          <string>BenutzerEingabe</string>
          </property>
         </widget>
        </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QGroupBox" name="groupBox_Output">
-      <property name="title">
-       <string>Output</string>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QTextBrowser" name="textBrowser_Output"/>
+       <item row="3" column="2">
+        <widget class="QLineEdit" name="lineEdit_USERINPUT">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="pushButton_IDN">
+         <property name="text">
+          <string>Identify</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -100,7 +135,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>588</width>
+     <width>698</width>
      <height>18</height>
     </rect>
    </property>

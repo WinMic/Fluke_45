@@ -32,6 +32,8 @@ import time
 
 
 #Imports für die Gui
+
+#TODO: Werden alle Imports benötigt?
 from PyQt4 import QtGui, QtCore
 
 from PyQt4.QtGui import QMainWindow, QWidget, QVBoxLayout,QHBoxLayout,\
@@ -51,6 +53,15 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
    
     
     def __init__(self): 
+        """
+        __init__ erstellt die Gui und verbindet die GUI-Elemente mit den
+        Einzelnen Funktionen des Programmes
+        
+        Parameters
+        ----------
+        
+        Self
+        """
         QtGui.QMainWindow.__init__(self)
         self.setupUi(self)
         
@@ -60,17 +71,21 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
             self.comboBox_COM.addItem(ValidComPorts[i][1])
         
         #verbinde die Guielemente mit den Funktionen
-        self.connect(self.comboBox_COM, QtCore.SIGNAL("activated(QString)"),self.serialPort)
-        self.connect(self.pushButton_IDN, QtCore.SIGNAL("clicked()"),self.serialSend_IDN)
-        self.connect(self.pushButton_VAL, QtCore.SIGNAL("clicked()"),self.serialSend_VAL)
-        self.connect(self.pushButton_exit, QtCore.SIGNAL("clicked()"),self.exitApp)
-    
-        
-        
+        self.comboBox_COM.activated.connect(self.serialPort)
+        self.pushButton_EXIT.clicked.connect(self.exitApp)
+        self.pushButton_IDN.clicked.connect(lambda: self.serialSend("*IDN?\n"))
+        self.pushButton_VAL.clicked.connect(lambda: self.serialSend("VAL?\n"))
+        self.pushButton_RESET.clicked.connect(lambda: self.serialSend("*RST\n"))
+        self.pushButton_USERINPUT.clicked.connect(lambda: self.serialSend(str(self.lineEdit_USERINPUT.text())+"\n"))
     
     def settext(self, Outputdata):
         """
         Schreibt die übergebenen Daten in das Textfeld der GUI
+        
+        Parameters
+        ----------
+        Self        
+        
         """
         self.textBrowser_Output.append(str(Outputdata))
     
@@ -78,7 +93,11 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
 
     def serialPort(self):
         """
-        #serialPort öffnet den COM-Port zum Fluke mit den standard RS-232 Einstellungen
+        serialPort öffnet den COM-Port zum Fluke mit den standard RS-232 Einstellungen
+        
+        Parameters
+        ----------
+        self
         """
         self.Debug_Msg("Serialport")
 
@@ -104,6 +123,10 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
     def serialScan(self):
         """
         Sucht nach verfügbaren Com-Ports und gibt diese in einer Liste zurück
+        
+        Parameters
+        ----------
+        self
         """
 
         ports = []
@@ -129,10 +152,14 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
 ###############################################################################
     def serialReadLine(self):
         """
-        #serialReadLine liest alle gesendeten Zeilen des Fluke45 solange bis das
-        #Messgerät den Sendebetrieb einstellt. Der Sendebetrieb ist vorbei, sobald
-        #das Messgerät ein Steuerzeichen ('=>' oder '?>' oder '!>') gefolgt von einem
-        #CR und LF (CR = Carriage Return, LF = Line Feed)
+        serialReadLine liest alle gesendeten Zeilen des Fluke45 solange bis das
+        Messgerät den Sendebetrieb einstellt. Der Sendebetrieb ist vorbei, sobald
+        das Messgerät ein Steuerzeichen ('=>' oder '?>' oder '!>') gefolgt von einem
+        CR und LF (CR = Carriage Return, LF = Line Feed)
+        
+        Parameters
+        ----------
+        self
         """
         Value = []
         i=0
@@ -162,104 +189,87 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
                 
                 #"=>\r\n" Steuerzeichen für Befehl verstanden, ausgeführt
                 #und bereit für einen neuen Befehl
-                if (Value[(len(Value))-1] == "=>\r\n"):
-  
-                    #Value[(len(Value))-1] -> Value[:-1]  !!!           
+                if (Value[-1] == "=>\r\n"):
+           
                     i = 1
                     self.Debug_Msg("Fluke45 hat Befehl verstanden u. ausgefuehrt")
                 #"?>\r\n" Steuerzeichen für Befehlsfehler
                 #Befehl wurde nicht verstanden.
-                elif (Value[(len(Value))-1] == '?>\r\n'):
+                elif (Value[-1] == '?>\r\n'):
                     i = 2
                     self.Debug_Msg("Befehl wurde vom Fluke45 nicht verstanden!")
                 #!>\r\n Steuerzeichen für Syntaxfehler
                 # Befehl wurde verstanden doch ist nicht ausführbar
                 # Siehe Fluke45 Handbuch Seite 5-5!
-                elif (Value[(len(Value))-1] == '!>\r\n'):
+                elif (Value[-1] == '!>\r\n'):
                     i = 3
                     self.Debug_Msg("Befehl verstanden, aber vom Fluke45 nicht ausfuehrbar")
         return Value
 
                                        
                  
-###############################################################################
-    def serialSend_VAL(self):
+###############################################################################        
+    def serialSend(self, SendMsg):
         """
-        #serialSend sendet momentan nur den *IDN? Befehl
-        # *IDN? vordert das Fluke45 auf sich zu Identifizieren (VersionsNR. etc)  
+        SerialSend sendet den übergebenen SendMsg-String an das Messgerät und
+        ruft anschließend die Funktion serialReadLine auf, um die Antwort des
+        Messgerätes zu erhalten.
+        Die Antwort des Messgerätes wird z.Z. nur auf der Console und dem
+        Textbrouser dargestellt.
         
-        #TODO: Allgemeingültige Sendefunktion schreiben.
-        #TODO: Minimale Syntaxprüfung? (Optional)
+        Parameters
+        ---------        
+        Self : 
+        
+        SendMsg : Der String der an das Messgerät gesendet werden soll.
+        
+        ReturnValue : None
+        
         """
-        self.Debug_Msg("serialSend_VAL")
-        self.ser.write("VAL?\n")
-        hutzelbrutzel = self.serialReadLine()    
+        self.Debug_Msg("serialSend Befehl: "+SendMsg[:-1])
+        self.ser.write(SendMsg)
+        hutzelbrutzel = self.serialReadLine()
         self.settext(hutzelbrutzel)
+        self.Debug_Msg("#####")
         
-        
-        
-        
-    def serialSend_IDN(self):
-        self.Debug_Msg("serialSend_IDN")
-        self.ser.write("*IDN?\n")
-        hutzelbrutzel = self.serialReadLine()    
-        self.settext(hutzelbrutzel)
-        """
-        Eine Sendfunktion mit dem Ladaparameter.
-        """        
         
         
     def exitApp(self):
+        """
+        exitApp schließt die Serieleschnitstelle und beendet anschließend das
+        Programm
         
-        #nur wenn die serielleschnitstelle auch offen ist.
-        self.ser.close()
-        
+        Parameters
+        ----------
+        self
+        """
+        if(self.ser.isOpen() == True):
+            self.ser.close()
         qApp.exit()
-        #sys.exit()
-        #quit on las window cloase...
-        #oder exit...
-        #oder sys quit...
+
         
-    def Debug_Msg(self,DebugMsg):
+    def Debug_Msg(self, DebugMsg):
+        """
+        Debug_Msg ist eine Hilfsfunktion welche Debuginformationen zur verfügung
+        stellt.
+        Die Funktion prüft, ob in der GUI der DebugnachrichtenOutput aktiviert 
+        ist, wenn ja werden die Ihr übergebenen Nachrichten in den TextBrouser
+        der GUI und in die PythonConsole geschrieben.
+        
+        Parameters
+        ----------
+        
+        self : 
+        
+        DebugMsg: String welcher die Debugnachricht enthällt und bei Aktivierter
+        checkBox_DEBUG ausgegeben wird
+        """
         if(self.checkBox_DEBUG.isChecked()):
             self.settext(DebugMsg)
             print(DebugMsg)
-    
-        
-        
-        
-  
-###############################################################################
-#Main Funktion
-###############################################################################
-
-#def main(self):
-#    
-#    
-#    
-#    app = QtGui.QApplication(sys.argv) 
-#    
-#
-#
-#    ValidComPorts = self.serialScan()
-#    for i in range(len(ValidComPorts)):
-#        self.comboBox_COM.addItem(ValidComPorts[i][1])
-#    
-#    
-#    
-#
-#    #TODO: Übergabeparameter klären gegebenenfalls umschreiben mit nur eienr Klasse
-#    self.connect(self.comboBox_COM, QtCore.SIGNAL("activated(QString)"),self.serialPort)
-#    self.connect(self.pushButton_IDN, QtCore.SIGNAL("clicked()"),self.serialSend_IDN)
-#    self.connect(self.pushButton_VAL, QtCore.SIGNAL("clicked()"),self.serialSend_VAL)
-#    self.connect(self.pushButton_exit, QtCore.SIGNAL("clicked()"),self.exitApp)
-#    
-#
-#    self.show()
-#    
-#        
-#    
-#    sys.exit(app.exec_())
+            
+    def Fluke_Selbsttest(self):
+        self.serialSend("*TST?\n")
     
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
