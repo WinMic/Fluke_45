@@ -88,7 +88,7 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
         
         """
         self.textBrowser_Output.append(str(Outputdata))
-    
+
 
 
     def serialPort(self):
@@ -204,6 +204,7 @@ class makeGui(QtGui.QMainWindow, Ui_Fluke45_GUI):
                 elif (Value[-1] == '!>\r\n'):
                     i = 3
                     self.Debug_Msg("Befehl verstanden, aber vom Fluke45 nicht ausfuehrbar")
+                
         return Value
 
                                        

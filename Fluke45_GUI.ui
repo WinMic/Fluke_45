@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>698</width>
-    <height>626</height>
+    <height>436</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_3">
-    <item row="2" column="0">
+    <item row="1" column="0">
      <widget class="QGroupBox" name="groupBox_Output">
       <property name="title">
        <string>Output</string>
@@ -35,97 +35,137 @@
      </widget>
     </item>
     <item row="0" column="0">
-     <widget class="QGroupBox" name="groupBox">
-      <property name="title">
-       <string>Einstellungen</string>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_DEBUG">
-         <property name="text">
-          <string>Debug Nachrichten</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QCheckBox" name="checkBox_DEBUG">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_COM">
-         <property name="text">
-          <string>COM-Port</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="comboBox_COM"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="pushButton_RESET">
-         <property name="text">
-          <string>Reset Fluke</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Reset Fluke45</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="2">
-        <widget class="QPushButton" name="pushButton_EXIT">
-         <property name="styleSheet">
-          <string notr="true">color: rgb(255, 0, 0);</string>
-         </property>
-         <property name="text">
-          <string>Beenden</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QWidget" name="">
+       <attribute name="title">
+        <string>Input</string>
+       </attribute>
+       <widget class="QGroupBox" name="groupBox_Input">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>0</y>
+          <width>661</width>
+          <height>131</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Input</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="1" column="0">
+          <widget class="QPushButton" name="pushButton_VAL">
+           <property name="text">
+            <string>Value</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QPushButton" name="pushButton_USERINPUT">
+           <property name="text">
+            <string>BenutzerEingabe</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLineEdit" name="lineEdit_USERINPUT">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QPushButton" name="pushButton_IDN">
+           <property name="text">
+            <string>Identify</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <zorder>groupBox_Input</zorder>
+       <zorder>groupBox_Input</zorder>
+      </widget>
+      <widget class="QWidget" name="Einstellungen">
+       <attribute name="title">
+        <string>Einstellungen</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Einstellungen</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="1">
+            <widget class="QComboBox" name="comboBox_COM"/>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_COM">
+             <property name="text">
+              <string>COM-Port</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="pushButton_RESET">
+             <property name="text">
+              <string>Reset Fluke</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_DEBUG">
+             <property name="text">
+              <string>Debug Nachrichten</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Reset Fluke45</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="checkBox_DEBUG">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" rowspan="2">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QGroupBox" name="groupBox_Input">
-      <property name="title">
-       <string>Input</string>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="pushButton_EXIT">
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 0, 0);</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="0">
-        <widget class="QPushButton" name="pushButton_VAL">
-         <property name="text">
-          <string>Value</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QPushButton" name="pushButton_USERINPUT">
-         <property name="text">
-          <string>BenutzerEingabe</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QLineEdit" name="lineEdit_USERINPUT">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="pushButton_IDN">
-         <property name="text">
-          <string>Identify</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <property name="text">
+       <string>Beenden</string>
+      </property>
      </widget>
     </item>
    </layout>
