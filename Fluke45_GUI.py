@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Fluke45_GUI.ui'
 #
-# Created: Mon Oct 13 16:18:25 2014
+# Created: Tue Oct 14 10:55:24 2014
 #      by: PyQt4 UI code generator 4.9.6
 #
 # WARNING! All changes made in this file will be lost!
